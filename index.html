@@ -99,6 +99,13 @@ h2 { font-size: clamp(2rem, 4.6vw, 3.2rem); line-height: 1.02; letter-spacing: -
 .oferta .rotulo { display: inline-block; background: var(--marinho); color: #fff; font-weight: 800; font-size: .8125rem; padding: 6px 14px; border-radius: 999px; letter-spacing: .02em; }
 .oferta h3 { font-size: 1.5rem; margin: 16px 0 4px; }
 .de { color: var(--ink-2); font-size: 1rem; margin-top: 18px; }
+.preco-linha { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px 18px; margin-top: 18px; }
+.preco-cortado { position: relative; display: inline-block; padding: 10px 26px; background: #fff0ef; border: 3px solid #e0201b; border-radius: 12px; }
+.preco-cortado span { position: relative; z-index: 1; font-size: 1.5rem; font-weight: 900; color: #3a0d0c; }
+.preco-cortado::after { content: ""; position: absolute; inset: -12px -16px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M8 8L92 92M92 8L8 92' stroke='%23e0201b' stroke-width='5' stroke-linecap='round' vector-effect='non-scaling-stroke' fill='none'/%3E%3C/svg%3E") no-repeat center / 100% 100%; }
+.timer-limite { background: var(--marinho); color: #fff; border-radius: 12px; padding: 8px 16px; line-height: 1.2; text-align: center; }
+.timer-limite small { display: block; font-size: .6875rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--amarelo); }
+.timer-limite b { font-size: 1.5rem; font-weight: 900; font-variant-numeric: tabular-nums; }
 .por { font-size: 4.6rem; font-weight: 900; letter-spacing: -0.05em; line-height: 1; margin: 4px 0; }
 .por small { font-size: 1.6rem; vertical-align: 26px; margin-right: 4px; letter-spacing: 0; }
 .parc { color: var(--ink-2); margin-bottom: 22px; }
@@ -241,6 +248,10 @@ footer p { margin: 0 0 6px; }
       <div class="oferta">
         <span class="rotulo">ACESSO COMPLETO</span>
         <h3>Fábrica de Vídeos</h3>
+        <div class="preco-linha">
+          <div class="preco-cortado"><span>R$ 129,90</span></div>
+          <div class="timer-limite"><small>Preço por tempo limitado</small><b id="timer">01:00:00</b></div>
+        </div>
         <div class="por"><small>R$</small>39,90</div>
         <div class="parc">pagamento único · acesso para sempre</div>
         <a class="btn" id="comprar" href="https://pay.kiwify.com.br/qPV3Grn">QUERO MEU ACESSO</a>
@@ -283,6 +294,27 @@ footer p { margin: 0 0 6px; }
 <div class="fixa" id="fixa"><div class="p"><b>R$ 39,90</b>pagamento único</div><a class="btn" href="#oferta">GARANTIR</a></div>
 
 <script>
+
+// Timer de 1 hora por visitante: começa na primeira visita e só reinicia quando zera
+(function () {
+  const HORA = 60 * 60 * 1000, CHAVE = 'fv_timer_fim';
+  const el = document.getElementById('timer');
+  let fim = 0;
+  try { fim = parseInt(localStorage.getItem(CHAVE), 10) || 0; } catch (e) {}
+  function novo() {
+    fim = Date.now() + HORA;
+    try { localStorage.setItem(CHAVE, String(fim)); } catch (e) {}
+  }
+  if (!fim || fim <= Date.now() || fim - Date.now() > HORA) novo();
+  function tique() {
+    let resta = fim - Date.now();
+    if (resta <= 0) { novo(); resta = HORA; }
+    const s = Math.floor(resta / 1000);
+    el.textContent = [Math.floor(s / 3600), Math.floor(s % 3600 / 60), s % 60].map(n => String(n).padStart(2, '0')).join(':');
+  }
+  tique();
+  setInterval(tique, 1000);
+})();
 
 // Barra de compra fixa depois do topo
 const fixa = document.getElementById('fixa');
