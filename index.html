@@ -349,7 +349,7 @@ E ainda esquece ele no ônibus.</textarea>
 
 <script>
 // Link do checkout da Kiwify (preenchido quando o produto existir)
-const CHECKOUT = '';
+const CHECKOUT = 'https://pay.kiwify.com.br/qPV3Grn';
 const botaoFinal = document.querySelector('#preco .comprar');
 if (CHECKOUT) botaoFinal.href = CHECKOUT;
 else botaoFinal.addEventListener('click', (e) => { e.preventDefault(); botaoFinal.textContent = 'Vendas abrem em instantes'; });
