@@ -152,7 +152,6 @@ footer p { margin: 0 0 6px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
-<script data-goatcounter="https://fabricadevideos.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 
@@ -317,10 +316,23 @@ footer p { margin: 0 0 6px; }
   setInterval(tique, 1000);
 })();
 
-// Contagem de cliques (GoatCounter): checkout e barra fixa
-function contar(nome) {
-  try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path: nome, title: nome, event: true}); } catch (e) {}
+// Contador próprio (Supabase): visita e cliques. Sem cookie, sem IP, sem dado pessoal.
+// A chave "publishable" é pública; a tabela só aceita inserir (RLS).
+function contar(evento) {
+  try {
+    let id = '';
+    try { id = sessionStorage.getItem('fv_v') || ''; if (!id) { id = Math.random().toString(36).slice(2, 12); sessionStorage.setItem('fv_v', id); } } catch (e) {}
+    let origem = '';
+    try { origem = document.referrer ? new URL(document.referrer).hostname.slice(0, 80) : 'direto'; } catch (e) {}
+    const utm = (new URLSearchParams(location.search).get('utm_source') || '').slice(0, 80) || null;
+    fetch('https://ufecxtcdhwzszlxagkxf.supabase.co/rest/v1/visitas', {
+      method: 'POST', keepalive: true,
+      headers: {'Content-Type': 'application/json', apikey: 'sb_publishable_-d6KXfHcixKiM5-jnLe2ZQ_TDx0iaBg', Prefer: 'return=minimal'},
+      body: JSON.stringify({evento, origem, utm, aparelho: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'celular' : 'computador', visitante: id || null})
+    }).catch(() => {});
+  } catch (e) {}
 }
+contar('visita');
 document.getElementById('comprar').addEventListener('click', () => contar('clique-checkout'));
 document.querySelector('#fixa .btn').addEventListener('click', () => contar('clique-garantir-barra'));
 
