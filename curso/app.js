@@ -2,6 +2,11 @@
 (() => {
   'use strict';
 
+  // Lido antes de tudo: o Supabase limpa o endereço assim que o cliente é criado.
+  const hashInicial = location.hash;
+  const tipoLink = (hashInicial.match(/type=([a-z_]+)/) || [])[1] || '';
+  const erroLink = decodeURIComponent((hashInicial.match(/error_description=([^&]+)/) || [])[1] || '').replace(/\+/g, ' ');
+
   const CFG = window.CURSO_CONFIG || {};
   const local = ['localhost', '127.0.0.1'].includes(location.hostname);
   const DEMO = local && (new URLSearchParams(location.search).has('demo') || !CFG.supabaseUrl);
@@ -66,10 +71,6 @@
 
   // ---------- Supabase ----------
   const sb = !DEMO && window.supabase ? window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey, {auth: {flowType: 'implicit', detectSessionInUrl: true, persistSession: true}}) : null;
-  const hashInicial = location.hash;
-  const tipoLink = (hashInicial.match(/type=([a-z_]+)/) || [])[1] || '';
-  const erroLink = decodeURIComponent((hashInicial.match(/error_description=([^&]+)/) || [])[1] || '').replace(/\+/g, ' ');
-
   let usuario = null;
   let curso = null;
   let prog = {feitas: {}, checks: {}, ultima: null, passos: {}};
@@ -105,7 +106,9 @@
       const b = $('button[type=submit]', el); b.disabled = true; b.innerHTML = '<span class="spinner" style="width:20px;height:20px;border-width:2px;border-top-color:#fff"></span>';
       const {data, error} = await sb.auth.signInWithPassword({email, password: senha});
       if (error) return telaLogin(/invalid/i.test(error.message) ? 'E-mail ou senha incorretos.' : 'Não foi possível entrar agora. Tente de novo em instantes.');
-      usuario = data.user; entrar();
+      usuario = data.user;
+      if (!usuario.user_metadata?.senha_definida) sb.auth.updateUser({data: {senha_definida: true}});
+      entrar();
     });
     $('#esqueci', el).addEventListener('click', () => telaEsqueci($('#email', el).value.trim()));
   }
@@ -144,6 +147,7 @@
   }
 
   function telaDefinirSenha(primeiro) {
+    telaSenhaAberta = true;
     const el = telaEntrada(`
       <h1>${primeiro ? 'Bem-vindo(a)!' : 'Nova senha'}</h1>
       <p>${primeiro ? 'Sua compra foi confirmada. Crie uma senha para entrar no curso sempre que quiser.' : 'Crie uma nova senha para a sua conta.'}</p>
@@ -169,7 +173,7 @@
       if (a.length < 8) return msg('A senha precisa ter pelo menos 8 caracteres.');
       if (a !== b) return msg('As duas senhas não são iguais.');
       $('button[type=submit]', el).disabled = true;
-      const {error} = await sb.auth.updateUser({password: a});
+      const {error} = await sb.auth.updateUser({password: a, data: {senha_definida: true}});
       if (error) { $('button[type=submit]', el).disabled = false; return msg(/same|different/i.test(error.message) ? 'Use uma senha diferente da anterior.' : 'Não foi possível salvar. O link pode ter expirado: peça um novo em "Esqueci minha senha".'); }
       toast('Senha criada');
       entrar();
@@ -784,12 +788,18 @@
     if (erroLink) { history.replaceState(null, '', location.pathname); return telaLogin(/expired|invalid/i.test(erroLink) ? 'Este link expirou ou já foi usado. Peça um novo em "Esqueci minha senha".' : erroLink); }
     const {data: {session}} = await sb.auth.getSession();
     if (tipoLink) history.replaceState(null, '', location.pathname + '#/');
-    if (session && ['invite', 'recovery', 'signup', 'magiclink'].includes(tipoLink)) { usuario = session.user; return telaDefinirSenha(tipoLink !== 'recovery'); }
-    if (session) { usuario = session.user; return entrar(); }
+    if (session) {
+      usuario = session.user;
+      // Quem chegou por link (convite ou recuperação) ou ainda não criou senha vai para a tela de senha.
+      const semSenha = !usuario.user_metadata?.senha_definida;
+      if (['invite', 'recovery', 'signup', 'magiclink'].includes(tipoLink) || semSenha) return telaDefinirSenha(tipoLink !== 'recovery');
+      return entrar();
+    }
     telaLogin();
   }
+  var telaSenhaAberta = false;
   sb?.auth.onAuthStateChange((ev, session) => {
-    if (ev === 'PASSWORD_RECOVERY' && session) { usuario = session.user; telaDefinirSenha(false); }
+    if (ev === 'PASSWORD_RECOVERY' && session && !telaSenhaAberta) { usuario = session.user; telaDefinirSenha(false); }
   });
   iniciar();
 })();
