@@ -152,6 +152,7 @@ footer p { margin: 0 0 6px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
+<script data-goatcounter="https://fabricadevideos.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 
@@ -315,6 +316,13 @@ footer p { margin: 0 0 6px; }
   tique();
   setInterval(tique, 1000);
 })();
+
+// Contagem de cliques (GoatCounter): checkout e barra fixa
+function contar(nome) {
+  try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path: nome, title: nome, event: true}); } catch (e) {}
+}
+document.getElementById('comprar').addEventListener('click', () => contar('clique-checkout'));
+document.querySelector('#fixa .btn').addEventListener('click', () => contar('clique-garantir-barra'));
 
 // Barra de compra fixa depois do topo
 const fixa = document.getElementById('fixa');
