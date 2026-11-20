@@ -79,7 +79,7 @@
   // ---------- telas de entrada ----------
   function telaEntrada(conteudo) {
     raiz.innerHTML = '';
-    const el = h(`<main class="entrada"><div class="cartao-entrada"><div class="app-icone" aria-hidden="true">🎬</div>${conteudo}</div></main>`);
+    const el = h(`<main class="entrada"><div class="cartao-entrada"><div class="app-icone" aria-hidden="true">F</div>${conteudo}</div></main>`);
     raiz.append(el);
     return el;
   }
@@ -256,8 +256,7 @@
         </div>
         <nav class="abas" aria-label="Seções">
           <a href="#/" data-aba="inicio">${ic('casa')}Início</a>
-          <a href="#/aulas" data-aba="aulas">${ic('livro')}Aulas</a>
-          <a href="#/ferramentas" data-aba="ferramentas">${ic('ferramenta')}Ferramentas</a>
+          <a href="#/aulas" data-aba="aulas">${ic('livro')}Passos</a>
           <a href="#/downloads" data-aba="downloads">${ic('baixar')}Downloads</a>
         </nav>
       </div>`);
@@ -283,19 +282,18 @@
     const aulaAtual = rota.tipo === 'aula' ? rota.id : null;
     const modAtual = aulaAtual ? aulaAtual.slice(0, 2) : null;
     nav.innerHTML = `
-      <div class="marca"><span class="mini" aria-hidden="true">🎬</span>Fábrica de Vídeos</div>
+      <div class="marca"><span class="mini" aria-hidden="true">F</span>Fábrica de Vídeos</div>
       <button class="busca-btn" id="buscaLateral">${ic('busca')}Buscar<kbd>Ctrl K</kbd></button>
       <a class="nav-item ${rota.tipo === 'inicio' ? 'ativo' : ''}" href="#/"><span class="emoji">${ic('casa')}</span>Início</a>
-      <a class="nav-item ${rota.tipo === 'ferramentas' ? 'ativo' : ''}" href="#/ferramentas"><span class="emoji">${ic('ferramenta')}</span>Ferramentas</a>
       <a class="nav-item ${rota.tipo === 'downloads' ? 'ativo' : ''}" href="#/downloads"><span class="emoji">${ic('baixar')}</span>Downloads</a>
-      <div class="progresso-lateral">${feitas} de ${total} aulas concluídas<div class="barra"><span style="width:${pct(feitas, total)}%"></span></div></div>
-      <div class="secao-titulo">Aulas</div>
+      <div class="progresso-lateral">${feitas} de ${total} passos feitos<div class="barra"><span style="width:${pct(feitas, total)}%"></span></div></div>
+      <div class="secao-titulo">Conteúdo</div>
       ${curso.modulos.map((m) => {
         const f = m.aulas.filter((a) => prog.feitas[a.id]).length;
         const aberto = abertos[m.id] ?? m.id === modAtual;
         return `<div>
           <button class="nav-item nav-mod" aria-expanded="${aberto || m.id === modAtual}" data-mod="${m.id}">
-            <span class="emoji" aria-hidden="true">${m.icone}</span><span>${esc(m.titulo)}</span>
+            <span class="num-mod" aria-hidden="true">${m.icone}</span><span>${esc(m.titulo)}</span>
             <span class="sub">${f}/${m.aulas.length}</span>${ic('chev', 'chev')}
           </button>
           <div class="nav-aulas" ${aberto || m.id === modAtual ? '' : 'hidden'}>
@@ -318,7 +316,7 @@
   function lerRota() {
     const p = location.hash.replace(/^#\/?/, '').split('/');
     if (p[0] === 'aula' && p[1]) return {tipo: 'aula', id: p[1]};
-    if (['aulas', 'ferramentas', 'downloads'].includes(p[0])) return {tipo: p[0]};
+    if (['aulas', 'downloads'].includes(p[0])) return {tipo: p[0]};
     return {tipo: 'inicio'};
   }
   function rotear() {
@@ -327,7 +325,7 @@
     desenharLateral(rota);
     const pag = $('#pagina');
     pag.className = 'pagina' + (rota.tipo === 'inicio' || rota.tipo === 'aulas' ? ' larga' : '');
-    ({inicio: paginaInicio, aulas: paginaAulas, aula: paginaAula, ferramentas: paginaFerramentas, downloads: paginaDownloads}[rota.tipo])(pag, rota);
+    ({inicio: paginaInicio, aulas: paginaAulas, aula: paginaAula, downloads: paginaDownloads}[rota.tipo])(pag, rota);
     scrollTo(0, 0);
     $('.topo')?.classList.remove('rolou');
   }
@@ -357,8 +355,8 @@
       const min = m.aulas.reduce((s, a) => s + a.minutos, 0);
       const primeira = m.aulas.find((a) => !prog.feitas[a.id]) || m.aulas[0];
       return `<a class="cartao-mod ${f === m.aulas.length ? 'feito' : ''}" href="#/aula/${primeira.id}">
-        <span class="ic" aria-hidden="true">${m.icone}</span>
-        <span class="n">Módulo ${i + 1} · ${m.aulas.length} aulas · ${min} min</span>
+        <span class="ic num" aria-hidden="true">${m.icone}</span>
+        <span class="n">${m.aulas.length} ${m.aulas.length === 1 ? 'parte' : 'partes'} · ${min} min</span>
         <strong>${esc(m.titulo)}</strong><p>${esc(m.resumo)}</p>
         <div class="barra" aria-label="${f} de ${m.aulas.length} aulas"><span style="width:${pct(f, m.aulas.length)}%"></span></div></a>`;
     }).join('')}</div>`;
@@ -375,22 +373,16 @@
       <h1 class="titulo-grande">${saudacao()}${nome ? `, ${esc(nome)}` : ''}</h1>
       <a class="continuar" href="#/aula/${prox.id}">
         ${anel(p)}
-        <div><small>${feitas === 0 ? 'Comece por aqui' : feitas === total ? 'Curso concluído · reveja' : 'Continue de onde parou'}</small><strong>${esc(prox.titulo)}</strong><span style="opacity:.85;font-size:.875rem">${esc(prox.modulo.titulo)} · ${prox.minutos} min</span></div>
+        <div><small>${feitas === 0 ? 'Comece por aqui' : feitas === total ? 'Tudo feito' : 'Continue de onde parou'}</small><strong>${esc(prox.titulo)}</strong><span style="opacity:.85;font-size:.875rem">${esc(prox.modulo.titulo)} · ${prox.minutos} min</span></div>
         <span class="play" aria-hidden="true">${ic('play')}</span>
       </a>
-      <h2 class="secao">Módulos</h2><p class="subtitulo">${curso.modulos.length} módulos · ${total} aulas · do computador vazio ao vídeo pronto.</p>
-      ${cartoesModulos()}
-      <h2 class="secao">Atalhos</h2>
-      <div class="lista-agrupada">
-        <a class="linha" href="#/ferramentas"><span class="ic" style="background:var(--indigo)">✍️</span><div><strong>Contador de roteiro</strong><small>Confira palavras, duração e as regras do esqueleto</small></div>${ic('chev', 'chev')}</a>
-        <a class="linha" href="#/ferramentas"><span class="ic" style="background:var(--pink)">📱</span><div><strong>Simulador de zona segura</strong><small>Veja o que Instagram, TikTok e YouTube cobrem</small></div>${ic('chev', 'chev')}</a>
-        <a class="linha" href="#/downloads"><span class="ic" style="background:var(--green)">📦</span><div><strong>Baixar o Kit</strong><small>Roteiro → voz → vídeo, com a skill do curso</small></div>${ic('chev', 'chev')}</a>
-      </div>`;
+      <h2 class="secao">Conteúdo</h2><p class="subtitulo">Siga o passo a passo uma vez. Depois, é só pedir os vídeos.</p>
+      ${cartoesModulos()}`;
   }
 
   function paginaAulas(pag) {
-    $('#tituloPequeno').textContent = 'Aulas';
-    pag.innerHTML = `<h1 class="titulo-grande">Aulas</h1><p class="subtitulo">Siga na ordem. Cada módulo termina com algo pronto.</p>${cartoesModulos()}`;
+    $('#tituloPequeno').textContent = 'Passo a passo';
+    pag.innerHTML = `<h1 class="titulo-grande">Passo a passo</h1><p class="subtitulo">Siga na ordem.</p>${cartoesModulos()}`;
   }
 
   function paginaAula(pag, rota) {
@@ -403,11 +395,11 @@
     prog.ultima = a.id; salvar();
     $('#tituloPequeno').textContent = a.titulo;
     pag.innerHTML = `
-      <div class="olho"><span>${a.modulo.icone} Módulo ${nMod} · Aula ${nAula}</span><span class="tempo">${ic('relogio')}${a.minutos} min</span></div>
+      <div class="olho"><span>${esc(a.modulo.titulo)}</span><span class="tempo">${ic('relogio')}${a.minutos} min</span></div>
       <h1 class="titulo-grande">${esc(a.titulo)}</h1>
       <article class="conteudo">${a.html}</article>
       <div class="fim-aula">
-        <button class="btn grande concluir ${prog.feitas[a.id] ? 'feita' : 'primario'}" id="concluir">${prog.feitas[a.id] ? `${ic('check')}Aula concluída` : 'Concluir aula'}</button>
+        <button class="btn grande concluir ${prog.feitas[a.id] ? 'feita' : 'primario'}" id="concluir">${prog.feitas[a.id] ? `${ic('check')}Feito` : 'Marcar como feito'}</button>
         <div class="navegacao">
           ${ant ? `<a href="#/aula/${ant.id}"><small>${ic('voltar')} Anterior</small>${esc(ant.titulo)}</a>` : '<span></span>'}
           ${prox ? `<a class="prox" href="#/aula/${prox.id}"><small>Próxima ${ic('chev')}</small>${esc(prox.titulo)}</a>` : ''}
@@ -420,48 +412,36 @@
       salvar();
       if (!ja) {
         const modFeito = a.modulo.aulas.every((x) => prog.feitas[x.id]);
-        if (totalFeitas() === todas.length) { confete(); toast('Curso concluído. Parabéns!'); }
-        else if (modFeito) { confete(); toast(`Módulo "${a.modulo.titulo}" concluído`); }
-        else toast('Aula concluída');
+        toast('Feito');
         if (prox) { location.hash = `#/aula/${prox.id}`; return; }
       }
       rotear();
     });
   }
 
-  function paginaFerramentas(pag) {
-    $('#tituloPequeno').textContent = 'Ferramentas';
-    pag.innerHTML = `<h1 class="titulo-grande">Ferramentas</h1><p class="subtitulo">Tudo funciona aqui mesmo, sem instalar nada.</p>
-      <div data-widget="contador"></div><div data-widget="zona"></div><div data-widget="prompt-imagem"></div><div data-widget="outlier"></div><div data-widget="nota"></div>`;
-    prepararConteudo(pag, 'ferramentas');
-  }
-
   function paginaDownloads(pag) {
     $('#tituloPequeno').textContent = 'Downloads';
-    pag.innerHTML = `<h1 class="titulo-grande">Downloads</h1><p class="subtitulo">Materiais do curso para usar no seu computador.</p>
+    pag.innerHTML = `<h1 class="titulo-grande">Downloads</h1>
       <div class="lista-agrupada downloads">
-        <div class="linha"><span class="ic" style="background:var(--green)">📦</span><div><strong>Kit de Vídeo com IA</strong><small>Roteiro → voz → vídeo 1080×1920 · inclui a skill "video-curto" · ZIP</small></div><button class="btn primario" id="baixarKit">${ic('baixar')}Baixar</button></div>
-        <div class="linha"><span class="ic" style="background:var(--indigo)">🎬</span><div><strong>Vídeo de exemplo do Kit</strong><small>O que sai do Kit sem mudar nada · MP4</small></div><a class="btn" href="${ASSETS}demo.mp4" download="exemplo-do-kit.mp4">${ic('baixar')}Baixar</a></div>
+        <div class="linha"><div><strong>Pasta Fábrica</strong><small>Abra no aplicativo do Claude e peça os vídeos</small></div><button class="btn primario" data-baixar>${ic('baixar')}Baixar</button></div>
+        <div class="linha"><div><strong>Vídeo de exemplo</strong><small>O que a pasta faz sem mudar nada</small></div><a class="btn" href="${ASSETS}demo.mp4" download="exemplo.mp4">${ic('baixar')}Baixar</a></div>
       </div>
-      <h2 class="secao">Links oficiais</h2>
+      <h2 class="secao">Links</h2>
       <div class="lista-agrupada">
-        <a class="linha" href="https://nodejs.org" target="_blank" rel="noopener"><span class="ic" style="background:#3c873a">⬢</span><div><strong>Node.js</strong><small>nodejs.org · versão LTS</small></div>${ic('chev', 'chev')}</a>
-        <a class="linha" href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener"><span class="ic" style="background:#d97757">✳</span><div><strong>Claude Code</strong><small>Instalação oficial</small></div>${ic('chev', 'chev')}</a>
-        <a class="linha" href="https://www.remotion.dev/docs/ai/skills" target="_blank" rel="noopener"><span class="ic" style="background:#0b84f3">▶</span><div><strong>Skills do Remotion</strong><small>remotion.dev · documentação oficial</small></div>${ic('chev', 'chev')}</a>
-        <a class="linha" href="https://github.com/lemomo-ai/lemo-opuscar" target="_blank" rel="noopener"><span class="ic" style="background:#e8553a">🎨</span><div><strong>Lemo-Opuscar</strong><small>GitHub · estilos de filme em código</small></div>${ic('chev', 'chev')}</a>
-        <a class="linha" href="https://www.capcut.com" target="_blank" rel="noopener"><span class="ic" style="background:#111">✂</span><div><strong>CapCut</strong><small>capcut.com</small></div>${ic('chev', 'chev')}</a>
+        <a class="linha" href="https://claude.ai/download" target="_blank" rel="noopener"><div><strong>Aplicativo do Claude</strong><small>claude.ai/download</small></div>${ic('chev', 'chev')}</a>
+        <a class="linha" href="https://claude.ai/upgrade" target="_blank" rel="noopener"><div><strong>Assinar o Claude Pro</strong><small>claude.ai</small></div>${ic('chev', 'chev')}</a>
       </div>`;
-    $('#baixarKit').addEventListener('click', baixarKit);
+    $('[data-baixar]', pag).forEach((b) => b.addEventListener('click', () => baixarPasta(b)));
   }
 
-  async function baixarKit() {
-    const b = $('#baixarKit'); b.disabled = true;
+  async function baixarPasta(b) {
+    b.disabled = true;
     try {
       let blob;
-      if (DEMO) blob = await (await fetch('../../dist/Kit-Video-com-IA.zip')).blob();
-      else { const {data, error} = await sb.storage.from('curso').download('Kit-Video-com-IA.zip'); if (error) throw error; blob = data; }
+      if (DEMO) blob = await (await fetch('../../dist/Fabrica-de-Videos.zip')).blob();
+      else { const {data, error} = await sb.storage.from('curso').download('Fabrica-de-Videos.zip'); if (error) throw error; blob = data; }
       const url = URL.createObjectURL(blob);
-      const a = h(`<a href="${url}" download="Kit-Video-com-IA.zip"></a>`); document.body.append(a); a.click(); a.remove();
+      const a = h(`<a href="${url}" download="Fabrica-de-Videos.zip"></a>`); document.body.append(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 5000);
       toast('Download iniciado', 'baixar');
     } catch { toast('Não foi possível baixar agora. Tente de novo.', 'alerta'); }
@@ -537,8 +517,13 @@
 
   const WIDGETS = {
     demo(el) {
-      el.outerHTML = `<div class="demo-wrap"><div class="tela"><video src="${ASSETS}demo.mp4" poster="${ASSETS}demo.jpg" controls playsinline loop preload="metadata" aria-label="Vídeo de exemplo feito com o Kit"></video></div>
-        <ul><li><strong>26 segundos</strong>, 73 palavras, 8 falas</li><li>Narração gerada por IA, em português</li><li>Legenda palavra por palavra, no meio da tela</li><li>Gancho escrito nos primeiros 2,5 s</li><li>Zoom contínuo: nada fica parado</li></ul></div>`;
+      el.outerHTML = `<div class="demo-wrap"><div class="tela"><video src="${ASSETS}demo.mp4" poster="${ASSETS}demo.jpg" controls playsinline loop preload="metadata" aria-label="Vídeo de exemplo feito com a pasta Fábrica"></video></div>
+        <p style="margin:0;color:var(--label-2)">Este vídeo saiu da pasta Fábrica com um único pedido: <em>faça um vídeo sobre o guarda-chuva</em>. O roteiro, os desenhos, a voz e a legenda foram feitos pelo Claude.</p></div>`;
+    },
+
+    'baixar-pasta'(el) {
+      el.outerHTML = `<div class="widget baixar" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap"><div><h3 style="margin:0">Pasta Fábrica</h3><p class="desc" style="margin:4px 0 0">Arquivo ZIP, 53 KB</p></div><button class="btn primario" data-baixar>${ic('baixar')}Baixar a pasta Fábrica</button></div>`;
+      document.querySelectorAll('.baixar [data-baixar]').forEach((b) => b.addEventListener('click', () => baixarPasta(b)));
     },
 
     instalador(el) {

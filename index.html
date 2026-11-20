@@ -3,385 +3,213 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Fábrica de Vídeos com IA</title>
-<meta name="description" content="Aprenda a fazer vídeos curtos verticais com inteligência artificial: Claude Code, skills, roteiro, imagem, voz e montagem. Curso online com kit pronto.">
-<meta property="og:title" content="Fábrica de Vídeos com IA">
-<meta property="og:description" content="Do computador vazio ao vídeo pronto: Claude Code, skills, roteiro de 25 segundos e um kit que transforma texto em vídeo.">
-<meta property="og:image" content="demo.jpg">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%230a84ff'/><text x='50' y='68' font-size='54' text-anchor='middle'>🎬</text></svg>">
+<title>Fábrica de Vídeos</title>
+<meta name="description" content="Uma pasta pronta e um passo a passo para fazer vídeos curtos com o Claude. Você pede o vídeo, ele faz roteiro, desenho, voz e legenda.">
+<meta property="og:title" content="Fábrica de Vídeos">
+<meta property="og:description" content="Você pede o vídeo. O Claude faz.">
+<meta property="og:image" content="quadros.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%231d1d1f'/><text x='50' y='70' font-size='60' font-weight='800' font-family='Arial' fill='white' text-anchor='middle'>F</text></svg>">
 <style>
 :root {
   color-scheme: light dark;
+  --bg: #ffffff; --bg-2: #f5f5f7; --card: #ffffff; --ink: #1d1d1f; --ink-2: #6e6e73; --line: #d2d2d7;
   --accent: #0071e3; --accent-h: #0077ed; --link: #0066cc;
-  --bg: #ffffff; --bg-alt: #f5f5f7; --card: #ffffff; --label: #1d1d1f; --label-2: #6e6e73; --sep: #d2d2d7;
-  --glass: rgba(255,255,255,.72); --sombra: 0 2px 12px rgba(0,0,0,.06);
-  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI Variable Display", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --ease: cubic-bezier(.2,.8,.2,1);
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --accent: #0a84ff; --accent-h: #409cff; --link: #2997ff; --bg: #000; --bg-alt: #101012; --card: #1c1c1e; --label: #f5f5f7; --label-2: #a1a1a6; --sep: #424245; --glass: rgba(22,22,23,.72); --sombra: 0 0 0 1px rgba(255,255,255,.06); }
+  :root { --bg: #000; --bg-2: #111113; --card: #1c1c1e; --ink: #f5f5f7; --ink-2: #a1a1a6; --line: #38383a; --accent: #0a84ff; --accent-h: #409cff; --link: #2997ff; }
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--bg); color: var(--label); font-family: var(--font); font-size: 1.0625rem; line-height: 1.47; letter-spacing: -0.012em; -webkit-font-smoothing: antialiased; }
-a { color: var(--link); text-decoration: none; }
-a:hover { text-decoration: underline; }
-:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 3px; border-radius: 8px; }
-img, video { max-width: 100%; display: block; }
-.cont { width: min(1000px, 100% - 32px); margin: 0 auto; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 1.0625rem; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+a { color: var(--link); }
+:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 50%, transparent); outline-offset: 3px; border-radius: 6px; }
+img, video { display: block; max-width: 100%; }
+.c { width: min(980px, 100% - 32px); margin: 0 auto; }
 
-/* barra local (como a das páginas de produto da Apple) */
-.barra { position: sticky; top: 0; z-index: 30; background: var(--glass); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid color-mix(in srgb, var(--sep) 60%, transparent); }
-.barra .cont { display: flex; align-items: center; height: 52px; gap: 16px; }
-.barra .nome { font-weight: 600; font-size: 1.1875rem; letter-spacing: -0.02em; margin-right: auto; color: var(--label); }
-.barra .nome:hover { text-decoration: none; }
-.barra nav { display: flex; gap: 20px; font-size: .8125rem; }
-.barra nav a { color: var(--label); opacity: .8; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 22px; border-radius: 980px; border: 0; background: var(--accent); color: #fff; font: 500 1.0625rem var(--font); cursor: pointer; transition: background .2s, transform .15s; }
-.btn:hover { background: var(--accent-h); text-decoration: none; }
-.btn:active { transform: scale(.97); }
-.btn.peq { min-height: 32px; padding: 0 14px; font-size: .8125rem; }
-.btn.grande { min-height: 56px; padding: 0 34px; font-size: 1.1875rem; }
-.btn.sec { background: transparent; color: var(--link); padding: 0 10px; }
-.btn.sec:hover { text-decoration: underline; background: transparent; }
+header { border-bottom: 1px solid var(--line); background: var(--bg); position: sticky; top: 0; z-index: 10; }
+header .c { display: flex; align-items: center; gap: 18px; height: 56px; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--ink); text-decoration: none; margin-right: auto; }
+.logo i { width: 26px; height: 26px; border-radius: 7px; background: var(--ink); color: var(--bg); font: 800 15px/26px var(--font); text-align: center; font-style: normal; }
+header a.entrar { color: var(--ink-2); text-decoration: none; font-size: .9375rem; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 22px; border-radius: 10px; background: var(--accent); color: #fff; font-weight: 600; text-decoration: none; border: 0; font-size: 1rem; cursor: pointer; }
+.btn:hover { background: var(--accent-h); }
+.btn.peq { min-height: 36px; padding: 0 14px; font-size: .9375rem; }
+.btn.grande { min-height: 54px; padding: 0 30px; font-size: 1.125rem; }
 
-/* herói */
-.heroi { text-align: center; padding: 64px 0 0; overflow: hidden; }
-.selo { display: inline-block; font-size: .875rem; font-weight: 600; color: #bf4800; margin-bottom: 10px; }
-@media (prefers-color-scheme: dark) { .selo { color: #ff9f0a; } }
-h1 { font-size: clamp(2.6rem, 7vw, 4.75rem); line-height: 1.05; letter-spacing: -0.035em; margin: 0 auto 16px; font-weight: 700; max-width: 14ch; }
-.grad { background: linear-gradient(90deg, #5e5ce6, #0a84ff 45%, #30b0c7); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.lead { font-size: clamp(1.1875rem, 2.4vw, 1.5rem); line-height: 1.35; color: var(--label-2); max-width: 36ch; margin: 0 auto 28px; letter-spacing: -0.02em; }
-.ctas { display: flex; gap: 14px; justify-content: center; align-items: center; flex-wrap: wrap; }
-.preco-mini { color: var(--label-2); font-size: .9375rem; margin-top: 12px; }
-.palco { position: relative; margin: 56px auto 0; height: 560px; max-width: 900px; }
-.iphone { position: absolute; left: 50%; top: 0; width: 280px; transform: translateX(-50%); aspect-ratio: 9/19.3; border-radius: 52px; background: #1c1c1e; padding: 12px; box-shadow: 0 0 0 2px #3a3a3c, 0 40px 80px rgba(0,0,0,.25); z-index: 2; }
-.iphone video { width: 100%; height: 100%; object-fit: cover; border-radius: 40px; }
-.iphone::before { content: ""; position: absolute; top: 22px; left: 50%; transform: translateX(-50%); width: 88px; height: 26px; border-radius: 20px; background: #000; z-index: 2; }
-.bolha { position: absolute; background: var(--card); border-radius: 18px; box-shadow: 0 18px 50px rgba(0,0,0,.14); padding: 14px 16px; text-align: left; font-size: .875rem; width: 230px; z-index: 3; animation: flutua 6s ease-in-out infinite; }
-.bolha b { display: block; font-size: .9375rem; margin-bottom: 2px; }
-.bolha span { color: var(--label-2); }
-.bolha .ic { font-size: 22px; float: left; margin: 2px 10px 0 0; }
-.b1 { left: 4%; top: 70px; } .b2 { right: 3%; top: 150px; animation-delay: -2s; } .b3 { left: 9%; top: 330px; animation-delay: -4s; } .b4 { right: 8%; top: 380px; animation-delay: -1s; }
-@keyframes flutua { 50% { transform: translateY(-10px); } }
-.chao { position: absolute; left: 0; right: 0; bottom: 0; height: 160px; background: linear-gradient(transparent, var(--bg)); z-index: 4; }
+.topo { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: center; padding: 72px 0 64px; }
+.topo h1 { font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.04; letter-spacing: -0.035em; margin: 0 0 20px; }
+.topo p.sub { font-size: 1.25rem; color: var(--ink-2); margin: 0 0 28px; max-width: 30ch; }
+.topo p.sub code { font-family: var(--mono); font-size: .95em; color: var(--ink); }
+.compra { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.compra small { color: var(--ink-2); font-size: .875rem; line-height: 1.4; }
+.compra small b { color: var(--ink); font-size: 1rem; display: block; }
+.celular { justify-self: center; width: min(300px, 80vw); aspect-ratio: 9 / 16; border-radius: 34px; overflow: hidden; border: 10px solid #1d1d1f; background: #000; box-shadow: 0 30px 60px rgba(0,0,0,.18); }
+.celular video { width: 100%; height: 100%; object-fit: cover; }
+.legenda-video { text-align: center; color: var(--ink-2); font-size: .8125rem; margin-top: 12px; }
 
-section { padding: 96px 0; }
-.alt { background: var(--bg-alt); }
-.olho { font-size: 1.1875rem; font-weight: 600; color: var(--label-2); margin: 0 0 6px; letter-spacing: -0.015em; }
-h2 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.07; letter-spacing: -0.03em; margin: 0 0 18px; font-weight: 700; }
-.centro { text-align: center; }
-.centro .lead { margin-bottom: 44px; }
+section { padding: 72px 0; border-top: 1px solid var(--line); }
+section.cinza { background: var(--bg-2); }
+h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 12px; }
+.intro { color: var(--ink-2); font-size: 1.125rem; margin: 0 0 36px; max-width: 52ch; }
 
-/* passos */
-.passos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.passo { background: var(--card); border-radius: 28px; padding: 30px 26px; box-shadow: var(--sombra); }
-.passo .n { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: #fff; margin-bottom: 18px; }
-.passo h3 { font-size: 1.5rem; letter-spacing: -0.02em; margin: 0 0 8px; line-height: 1.15; }
-.passo p { margin: 0; color: var(--label-2); }
+.passos { list-style: none; margin: 0; padding: 0; counter-reset: p; display: grid; gap: 14px; }
+.passos li { counter-increment: p; display: grid; grid-template-columns: 44px 1fr; gap: 6px 16px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+.passos li::before { content: counter(p); width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--bg); display: grid; place-items: center; font-weight: 700; grid-row: span 2; }
+.passos b { font-size: 1.125rem; }
+.passos span { color: var(--ink-2); }
+.pedido { font-family: var(--mono); font-size: .9375rem; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; margin-top: 8px; grid-column: 2; color: var(--ink); }
 
-/* demonstração interativa */
-.demo { display: grid; grid-template-columns: 1.05fr .95fr; gap: 28px; align-items: stretch; }
-.painel { background: var(--card); border-radius: 28px; padding: 26px; box-shadow: var(--sombra); }
-.painel h3 { margin: 0 0 6px; font-size: 1.3125rem; letter-spacing: -0.02em; }
-.painel p.d { margin: 0 0 16px; color: var(--label-2); font-size: .9375rem; }
-textarea { width: 100%; min-height: 230px; border: 1px solid var(--sep); background: var(--bg); color: var(--label); border-radius: 16px; padding: 14px 16px; font: .9375rem/1.5 var(--font); resize: vertical; }
-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent); }
-.nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 6px; }
-.nums div { background: var(--bg-alt); border-radius: 14px; padding: 12px; }
-.nums b { display: block; font-size: 1.625rem; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
-.nums small { color: var(--label-2); font-size: .8125rem; }
-.regras { list-style: none; margin: 0; padding: 0; }
-.regras li { display: flex; gap: 12px; align-items: flex-start; padding: 11px 0; border-top: 1px solid var(--sep); font-size: .9375rem; }
-.regras li:first-child { border-top: 0; }
-.regras i { width: 22px; height: 22px; flex: none; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-weight: 800; font-size: 12px; color: #fff; background: #ff9500; }
-.regras .ok i { background: #34c759; }
+.quadros { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
+.nota { color: var(--ink-2); font-size: .9375rem; margin-top: 14px; }
 
-/* recursos (bento) */
-.bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; }
-.tile { background: var(--card); border-radius: 28px; padding: 30px; box-shadow: var(--sombra); overflow: hidden; position: relative; min-height: 250px; display: flex; flex-direction: column; }
-.tile .em { font-size: 40px; margin-bottom: auto; }
-.tile h3 { font-size: 1.5rem; letter-spacing: -0.02em; line-height: 1.15; margin: 18px 0 8px; }
-.tile p { margin: 0; color: var(--label-2); }
-.t4 { grid-column: span 4; } .t2 { grid-column: span 2; } .t3 { grid-column: span 3; } .t6 { grid-column: span 6; }
-.tile.escuro { background: #000; color: #f5f5f7; }
-.tile.escuro p { color: #a1a1a6; }
-.terminal { margin-top: 18px; background: #1c1c1e; border-radius: 14px; padding: 14px 16px; font: .8125rem/1.6 ui-monospace, "SF Mono", Consolas, monospace; color: #e5e5ea; }
-.terminal .p { color: #30d158; }
-.terminal .c { color: #8e8e93; }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-.chips span { font-size: .8125rem; padding: 6px 12px; border-radius: 980px; background: var(--bg-alt); color: var(--label); }
+.lista { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; margin: 0; padding: 0; list-style: none; }
+.lista li { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.lista li b { display: block; }
+.lista li span { color: var(--ink-2); font-size: .9375rem; }
 
-/* módulos */
-.mods { background: var(--card); border-radius: 28px; box-shadow: var(--sombra); overflow: hidden; max-width: 760px; margin: 0 auto; }
-.mods details { border-top: 1px solid var(--sep); }
-.mods details:first-child { border-top: 0; }
-.mods summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 14px; min-height: 68px; padding: 12px 22px; }
-.mods summary::-webkit-details-marker { display: none; }
-.mods summary .e { font-size: 24px; width: 32px; text-align: center; }
-.mods summary b { font-weight: 600; }
-.mods summary small { display: block; color: var(--label-2); font-size: .875rem; font-weight: 400; }
-.mods summary .mais { margin-left: auto; width: 28px; height: 28px; border-radius: 50%; background: var(--bg-alt); display: grid; place-items: center; transition: transform .25s var(--ease); flex: none; }
-.mods details[open] .mais { transform: rotate(45deg); }
-.mods ul { margin: 0; padding: 0 22px 18px 68px; color: var(--label-2); font-size: .9375rem; }
-.mods li { margin-bottom: 4px; }
+.eu { display: grid; grid-template-columns: 1fr; max-width: 640px; }
+.eu p { margin: 0 0 14px; font-size: 1.125rem; }
+.eu .ass { color: var(--ink-2); font-size: 1rem; }
 
-/* prova */
-.prova { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center; }
-.prova div { padding: 10px; }
-.prova b { display: block; font-size: clamp(2.5rem, 6vw, 4rem); letter-spacing: -0.04em; line-height: 1; margin-bottom: 8px; }
-.prova p { margin: 0 auto; color: var(--label-2); max-width: 24ch; }
-.nota { font-size: .8125rem; color: var(--label-2); text-align: center; max-width: 60ch; margin: 30px auto 0; }
+.preco { max-width: 460px; margin: 0 auto; text-align: center; }
+.preco .valor { font-size: 3.5rem; font-weight: 700; letter-spacing: -0.04em; margin: 8px 0 2px; }
+.preco .valor small { font-size: 1.5rem; vertical-align: 14px; margin-right: 4px; letter-spacing: 0; }
+.preco p { color: var(--ink-2); margin: 0 0 24px; }
+.preco .btn { width: 100%; }
+.preco .det { font-size: .875rem; color: var(--ink-2); margin-top: 16px; line-height: 1.5; }
 
-/* preço */
-.preco { max-width: 520px; margin: 0 auto; background: var(--card); border-radius: 32px; padding: 40px 34px; box-shadow: 0 30px 80px rgba(0,0,0,.12); text-align: center; }
-.preco .valor { font-size: 4.25rem; font-weight: 700; letter-spacing: -0.045em; line-height: 1; margin: 6px 0 4px; }
-.preco .valor small { font-size: 1.5rem; letter-spacing: -0.02em; vertical-align: top; margin-right: 4px; position: relative; top: 10px; }
-.preco .sub { color: var(--label-2); margin-bottom: 26px; }
-.preco ul { list-style: none; padding: 0; margin: 0 0 28px; text-align: left; }
-.preco li { display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid var(--sep); }
-.preco li:first-child { border-top: 0; }
-.preco li::before { content: "✓"; color: #34c759; font-weight: 800; }
-.garantia { display: flex; gap: 12px; align-items: center; justify-content: center; margin-top: 18px; color: var(--label-2); font-size: .875rem; }
-.pago { font-size: .8125rem; color: var(--label-2); margin-top: 10px; }
-
-/* faq */
-.faq { max-width: 760px; margin: 0 auto; }
-.faq details { border-bottom: 1px solid var(--sep); }
-.faq summary { list-style: none; cursor: pointer; padding: 22px 40px 22px 0; font-size: 1.1875rem; font-weight: 600; letter-spacing: -0.015em; position: relative; }
+.faq { max-width: 720px; }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary { cursor: pointer; padding: 18px 32px 18px 0; font-weight: 600; font-size: 1.0625rem; list-style: none; position: relative; }
 .faq summary::-webkit-details-marker { display: none; }
-.faq summary::after { content: "+"; position: absolute; right: 4px; top: 18px; font-size: 1.6rem; font-weight: 300; color: var(--label-2); transition: transform .25s var(--ease); }
-.faq details[open] summary::after { transform: rotate(45deg); }
-.faq p { margin: 0 0 22px; color: var(--label-2); }
+.faq summary::after { content: "+"; position: absolute; right: 4px; top: 14px; font-size: 1.5rem; font-weight: 300; color: var(--ink-2); }
+.faq details[open] summary::after { content: "−"; }
+.faq p { margin: 0 0 18px; color: var(--ink-2); }
 
-footer { background: var(--bg-alt); color: var(--label-2); font-size: .75rem; padding: 30px 0 110px; }
-footer p { margin: 0 0 8px; }
-.fixo { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 40; display: none; align-items: center; gap: 12px; background: var(--glass); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-radius: 20px; padding: 10px 10px 10px 18px; box-shadow: 0 10px 40px rgba(0,0,0,.18); }
-.fixo b { font-size: 1.0625rem; }
-.fixo small { display: block; color: var(--label-2); font-size: .75rem; }
-.fixo .btn { margin-left: auto; }
+footer { border-top: 1px solid var(--line); padding: 28px 0 96px; color: var(--ink-2); font-size: .8125rem; }
+footer p { margin: 0 0 6px; }
 
-.revela { opacity: 0; transform: translateY(30px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
-.revela.ok { opacity: 1; transform: none; }
+.barra-fixa { display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--bg); border-top: 1px solid var(--line); padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); align-items: center; gap: 12px; }
+.barra-fixa div { font-size: .875rem; color: var(--ink-2); }
+.barra-fixa b { color: var(--ink); font-size: 1rem; display: block; }
+.barra-fixa .btn { margin-left: auto; }
 
-@media (max-width: 860px) {
-  .barra nav { display: none; }
-  .palco { height: 520px; }
-  .bolha { width: 170px; font-size: .75rem; padding: 10px 12px; }
-  .bolha .ic { display: none; }
-  .b1 { left: 0; top: 40px; } .b2 { right: 0; top: 120px; } .b3 { left: 0; top: 300px; } .b4 { right: 0; top: 360px; }
-  .passos, .demo, .prova { grid-template-columns: 1fr; }
-  .bento { grid-template-columns: 1fr; }
-  .t4, .t2, .t3, .t6 { grid-column: auto; }
-  section { padding: 72px 0; }
-  .fixo { display: flex; }
-}
-@media (max-width: 520px) {
-  .bolha { display: none; }
-  .palco { height: 560px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
-  .revela { opacity: 1; transform: none; }
+@media (max-width: 820px) {
+  .topo { grid-template-columns: 1fr; gap: 36px; padding: 44px 0; }
+  .lista { grid-template-columns: 1fr; }
+  section { padding: 56px 0; }
+  .barra-fixa { display: flex; }
+  header a.entrar { display: none; }
 }
 </style>
 </head>
 <body>
 
-<header class="barra">
-  <div class="cont">
-    <a class="nome" href="#">Fábrica de Vídeos</a>
-    <nav aria-label="Seções"><a href="#como">Como funciona</a><a href="#teste">Teste agora</a><a href="#conteudo">Conteúdo</a><a href="#faq">Dúvidas</a><a href="curso/">Entrar</a></nav>
+<header>
+  <div class="c">
+    <a class="logo" href="#"><i>F</i>Fábrica de Vídeos</a>
+    <a class="entrar" href="curso/">Já comprei · Entrar</a>
     <a class="btn peq comprar" href="#preco">Comprar</a>
   </div>
 </header>
 
 <main>
-  <section class="heroi">
-    <div class="cont">
-      <div class="selo">Curso online · acesso imediato</div>
-      <h1>Vídeos curtos, <span class="grad">feitos com IA.</span></h1>
-      <p class="lead">Do computador vazio ao vídeo pronto: Claude Code, skills, roteiro de 25 segundos e um kit que transforma texto em vídeo.</p>
-      <div class="ctas"><a class="btn grande comprar" href="#preco">Quero aprender</a><a class="btn sec" href="#teste">Testar uma ferramenta ›</a></div>
-      <div class="preco-mini">R$ 39,90 · pagamento único · garantia de 7 dias</div>
-      <div class="palco" aria-hidden="false">
-        <div class="bolha b1"><span class="ic">✍️</span><b>Roteiro</b><span>73 palavras, 26 segundos</span></div>
-        <div class="bolha b2"><span class="ic">🎙️</span><b>Voz com IA</b><span>narração em português</span></div>
-        <div class="bolha b3"><span class="ic">💬</span><b>Legenda</b><span>no meio da tela, palavra por palavra</span></div>
-        <div class="bolha b4"><span class="ic">⚡</span><b>Um comando</b><span><code>npm run video</code></span></div>
-        <div class="iphone"><video src="demo.mp4" poster="demo.jpg" autoplay muted loop playsinline aria-label="Vídeo de exemplo gerado pelo kit do curso"></video></div>
-        <div class="chao"></div>
+  <div class="c topo">
+    <div>
+      <h1>Você pede o vídeo. O Claude faz.</h1>
+      <p class="sub">Uma pasta pronta e um passo a passo de 30 minutos. Depois disso, cada vídeo curto sai com um pedido: <code>faça um vídeo sobre a escova de dente</code>.</p>
+      <div class="compra">
+        <a class="btn grande comprar" href="#preco">Quero a pasta</a>
+        <small><b>R$ 39,90</b>pagamento único, 7 dias de garantia</small>
       </div>
+    </div>
+    <div>
+      <div class="celular"><video src="demo.mp4" poster="demo.jpg" autoplay muted loop playsinline controls aria-label="Vídeo feito com a pasta"></video></div>
+      <p class="legenda-video">Feito com um pedido só: "faça um vídeo sobre o guarda-chuva".</p>
+    </div>
+  </div>
+
+  <section class="cinza">
+    <div class="c">
+      <h2>Como funciona</h2>
+      <p class="intro">Você não precisa saber programar, editar ou desenhar. Precisa copiar, colar e escolher o tema.</p>
+      <ol class="passos">
+        <li><b>Instale o aplicativo do Claude</b><span>Ele é gratuito para baixar. Para fazer vídeos, precisa do plano Pro, pago à parte.</span></li>
+        <li><b>Baixe a pasta Fábrica e abra no Claude</b><span>A pasta já tem as instruções que eu uso para os meus vídeos.</span></li>
+        <li><b>Cole uma mensagem para preparar o computador</b><span>O Claude instala sozinho o que falta. Você só clica em permitir.</span><div class="pedido">Prepare este computador para fazer vídeos.</div></li>
+        <li><b>Peça o vídeo</b><span>Roteiro, cenas desenhadas, voz em português, legenda e MP4 vertical.</span><div class="pedido">Faça um vídeo sobre o chinelo.</div></li>
+        <li><b>Poste</b><span>O vídeo sai pronto para Reels, TikTok e Shorts, com uma sugestão de legenda.</span></li>
+      </ol>
     </div>
   </section>
 
-  <section id="como" class="alt">
-    <div class="cont centro">
-      <p class="olho revela">Como funciona</p>
-      <h2 class="revela">Três passos. Nenhum vídeo gravado.</h2>
-      <p class="lead revela">Você não precisa aparecer, ter câmera ou saber editar.</p>
-      <div class="passos" style="text-align:left">
-        <div class="passo revela"><div class="n" style="background:#5e5ce6">1</div><h3>Prepare o computador</h3><p>Lista de instalação com o comando exato para Windows e Mac, o Claude Code e as três skills de vídeo.</p></div>
-        <div class="passo revela"><div class="n" style="background:#0a84ff">2</div><h3>Escreva no esqueleto</h3><p>O roteiro de 25 segundos que segura do primeiro ao último segundo, com as seis regras que mais pesaram.</p></div>
-        <div class="passo revela"><div class="n" style="background:#30b0c7">3</div><h3>Gere o vídeo</h3><p>Pelo CapCut, pelo kit do curso ou pedindo em português ao Claude Code, em qualquer estilo visual.</p></div>
-      </div>
+  <section>
+    <div class="c">
+      <h2>O que sai</h2>
+      <p class="intro">Quadros do vídeo de exemplo, sem retoque. Personagem fixo, um rival que atrapalha, legenda no meio da tela, onde as redes não cobrem.</p>
+      <div class="quadros"><img src="quadros.jpg" alt="Quatro quadros do vídeo de exemplo: chuva na festa, a folha de bananeira, o guarda-chuva com mola e o cunhado indo embora com o guarda-chuva" loading="lazy"></div>
+      <p class="nota">Você pode pedir ajustes do jeito que falaria com uma pessoa: "troca a voz para mulher", "deixa mais rápido", "o cunhado de camisa azul".</p>
     </div>
   </section>
 
-  <section id="teste">
-    <div class="cont">
-      <div class="centro"><p class="olho revela">Teste agora</p><h2 class="revela">Seu roteiro passa no esqueleto?</h2><p class="lead revela">Uma das ferramentas da área do aluno, liberada aqui. Escreva uma frase por linha.</p></div>
-      <div class="demo revela">
-        <div class="painel">
-          <h3>Roteiro</h3><p class="d">Edite à vontade. A conferência é automática.</p>
-          <textarea id="rot" aria-label="Roteiro, uma frase por linha">Você sai de casa arrumado, e cai um temporal bem na sua cabeça.
-Então você segura uma folha de bananeira por cima.
-Funciona! Mas o vento leva a folha embora.
-Então você amarra um pano esticado em cima de umas varetas.
-Mas ele não cabe na porta do ônibus.
-Então você faz as varetas dobrarem pra baixo, com uma mola no cabo.
-Parabéns, você inventou o guarda-chuva.
-E ainda esquece ele no ônibus.</textarea>
-        </div>
-        <div class="painel">
-          <h3>Conferência</h3><p class="d">O que a área do aluno verifica no seu texto.</p>
-          <div class="nums"><div><b id="nP">0</b><small>palavras</small></div><div><b id="nS">0 s</b><small>duração</small></div><div><b id="nF">0</b><small>frases</small></div></div>
-          <ul class="regras" id="regras" aria-live="polite"></ul>
-        </div>
-      </div>
+  <section class="cinza">
+    <div class="c">
+      <h2>O que você recebe</h2>
+      <ul class="lista">
+        <li><b>A pasta Fábrica</b><span>O projeto que faz os vídeos, com as instruções que o Claude segue.</span></li>
+        <li><b>O passo a passo</b><span>Do computador vazio ao primeiro vídeo, com tudo para copiar e colar.</span></li>
+        <li><b>Prompts prontos</b><span>Para pedir vídeos, ideias de tema e ajustes.</span></li>
+        <li><b>Ajuda</b><span>Os problemas mais comuns e o meu e-mail, se travar.</span></li>
+      </ul>
     </div>
   </section>
 
-  <section class="alt">
-    <div class="cont">
-      <div class="centro"><p class="olho revela">O que vem junto</p><h2 class="revela">Uma plataforma, não um PDF.</h2><p class="lead revela">Aulas curtas, ferramentas interativas e um kit que roda no seu computador.</p></div>
-      <div class="bento">
-        <div class="tile t4 escuro revela"><div class="em">📦</div><h3>Kit de vídeo com IA</h3><p>Você edita um arquivo de texto e roda um comando. Sai um MP4 1080×1920 com voz, legenda animada no lugar certo e gancho nos primeiros segundos.</p>
-          <div class="terminal"><div><span class="p">$</span> npm run video</div><div class="c">Fala 1/8: Você sai de casa arrumado…</div><div class="c">Pronto: 8 falas, 73 palavras, 26,3 s de vídeo.</div><div><span class="p">✓</span> out/video.mp4</div></div></div>
-        <div class="tile t2 revela"><div class="em">🧩</div><h3>Skills do Claude Code</h3><p>Quais instalar, com o comando exato, e a skill exclusiva do curso.</p></div>
-        <div class="tile t2 revela"><div class="em">📱</div><h3>Simulador de tela</h3><p>Suba um quadro e veja o que Instagram, TikTok e YouTube cobrem.</p></div>
-        <div class="tile t2 revela"><div class="em">📈</div><h3>Caçador de virais</h3><p>Cole as views de um criador e descubra quais vídeos fugiram da curva.</p></div>
-        <div class="tile t2 revela"><div class="em">🎨</div><h3>Prompts de imagem</h3><p>Um prompt por cena, com o mesmo personagem em todas.</p></div>
-        <div class="tile t6 revela"><div class="em">🎞️</div><h3>Três caminhos de montagem</h3><p>Comece hoje no CapCut, ganhe volume com o kit ou crie em qualquer estilo com o Claude Code e mais de 60 estilos de filme prontos.</p>
-          <div class="chips"><span>Cartoon 3D</span><span>Aquarela</span><span>Pintura a óleo</span><span>Papel recortado</span><span>Infográfico</span><span>Xilogravura</span><span>Lousa</span><span>+ dezenas</span></div></div>
-      </div>
+  <section>
+    <div class="c eu">
+      <h2>Por que eu fiz isso</h2>
+      <p>Eu faço vídeos curtos para as minhas contas e testei uns dez formatos até achar um que segura as pessoas até o fim: uma situação que todo mundo já viveu, um parente que atrapalha e uma solução que existe de verdade.</p>
+      <p>Meu melhor vídeo nesse formato passou de 21 mil visualizações no YouTube. A maioria fica bem abaixo disso. Ninguém consegue prometer que um vídeo vai viralizar, e eu também não prometo. O que a pasta faz é te deixar produzir sem travar na parte técnica.</p>
+      <p class="ass">Pedro</p>
     </div>
   </section>
 
-  <section id="conteudo">
-    <div class="cont">
-      <div class="centro"><p class="olho revela">Conteúdo</p><h2 class="revela">10 módulos. 26 aulas.</h2><p class="lead revela">Só o que você precisa para fazer o vídeo. Nada de enrolação.</p></div>
-      <div class="mods revela">
-        <details><summary><span class="e">🎬</span><span><b>Comece aqui</b><small>O que você vai criar e qual caminho seguir</small></span><span class="mais">+</span></summary><ul><li>O que você vai criar</li><li>Os três caminhos de produção</li></ul></details>
-        <details><summary><span class="e">💻</span><span><b>Prepare o computador</b><small>Lista de instalação para Windows e Mac</small></span><span class="mais">+</span></summary><ul><li>O que instalar (e por quê)</li><li>Claude Code: instalar e entrar</li><li>Seu primeiro teste</li></ul></details>
-        <details><summary><span class="e">🧩</span><span><b>Skills do Claude Code</b><small>Quais instalar, como instalar e como testar</small></span><span class="mais">+</span></summary><ul><li>O que é uma skill</li><li>As 3 skills de vídeo para instalar</li><li>Testar se as skills estão funcionando</li></ul></details>
-        <details><summary><span class="e">💡</span><span><b>A ideia certa</b><small>Nicho, formato e virais para copiar a estrutura</small></span><span class="mais">+</span></summary><ul><li>Um nicho que rende vídeo</li><li>O formato que se repete</li><li>Ache virais para copiar a estrutura</li></ul></details>
-        <details><summary><span class="e">✍️</span><span><b>Roteiro que segura</b><small>O esqueleto de 25 segundos</small></span><span class="mais">+</span></summary><ul><li>O esqueleto de 25 segundos</li><li>As seis regras que mais pesaram</li><li>Escreva o seu (com o contador)</li></ul></details>
-        <details><summary><span class="e">🎨</span><span><b>Imagens com IA</b><small>Cenas verticais e personagem consistente</small></span><span class="mais">+</span></summary><ul><li>Gerar as cenas</li><li>Personagem igual em todas as cenas</li></ul></details>
-        <details><summary><span class="e">🎙️</span><span><b>Voz e som</b><small>Narração, música e efeitos</small></span><span class="mais">+</span></summary><ul><li>A narração</li><li>Música e efeitos</li></ul></details>
-        <details><summary><span class="e">🎞️</span><span><b>Montagem</b><small>Regras de tela e os três caminhos</small></span><span class="mais">+</span></summary><ul><li>Regras de tela (com simulador)</li><li>Caminho 1: CapCut</li><li>Caminho 2: o kit do curso</li><li>Caminho 3: Claude Code + skills</li></ul></details>
-        <details><summary><span class="e">✅</span><span><b>Revisão final</b><small>Compare com o viral e confira tudo</small></span><span class="mais">+</span></summary><ul><li>Comparar com o viral, segundo a segundo</li><li>O checklist do vídeo pronto</li></ul></details>
-        <details><summary><span class="e">📚</span><span><b>Biblioteca de prompts</b><small>Todos os prompts, prontos para copiar</small></span><span class="mais">+</span></summary><ul><li>Prompts de ideia e roteiro</li><li>Prompts de produção</li></ul></details>
-      </div>
+  <section class="cinza" id="preco">
+    <div class="c preco">
+      <h2>Fábrica de Vídeos</h2>
+      <div class="valor"><small>R$</small>39,90</div>
+      <p>Pagamento único. Acesso na hora, pelo seu e-mail.</p>
+      <a class="btn grande" id="comprar" href="#">Comprar</a>
+      <div class="det">Pix ou cartão, pela Kiwify. Se não gostar, peça o reembolso em até 7 dias.<br>Você vai precisar do plano Pro do Claude, que é cobrado à parte pela Anthropic.</div>
     </div>
   </section>
 
-  <section class="alt">
-    <div class="cont">
-      <div class="centro"><p class="olho revela">Feito na prática</p><h2 class="revela">Um método testado em conta real.</h2></div>
-      <div class="prova">
-        <div class="revela"><b class="grad">21,6 mil</b><p>views no YouTube do melhor vídeo feito com este método, em conta nova</p></div>
-        <div class="revela"><b class="grad">~10</b><p>formatos testados antes de chegar ao esqueleto ensinado aqui</p></div>
-        <div class="revela"><b class="grad">25 s</b><p>a duração que mais segurou atenção nos testes</p></div>
-      </div>
-      <p class="nota">Resultados variam e dependem de tema, constância e teste. A maioria dos vídeos do método ficou bem abaixo do melhor resultado. Nenhum curso garante viralização ou renda.</p>
-    </div>
-  </section>
-
-  <section id="preco">
-    <div class="cont">
-      <div class="preco revela">
-        <p class="olho">Fábrica de Vídeos com IA</p>
-        <div class="valor"><small>R$</small>39,90</div>
-        <div class="sub">pagamento único · acesso imediato</div>
-        <ul>
-          <li>10 módulos e 26 aulas na plataforma interativa</li>
-          <li>Kit de vídeo com IA + skill exclusiva do Claude Code</li>
-          <li>Guia de instalação para Windows e Mac</li>
-          <li>5 ferramentas: contador de roteiro, simulador de tela, caçador de virais, prompts de imagem e nota do tema</li>
-          <li>Biblioteca de prompts prontos</li>
-          <li>Progresso salvo, no computador e no celular</li>
-        </ul>
-        <a class="btn grande comprar" href="#" style="width:100%">Comprar agora</a>
-        <div class="garantia">🛡️ Garantia de 7 dias: não gostou, devolvemos 100%.</div>
-        <div class="pago">Pagamento seguro pela Kiwify · Pix ou cartão. O acesso chega no seu e-mail.</div>
-      </div>
-    </div>
-  </section>
-
-  <section id="faq" class="alt">
-    <div class="cont">
-      <h2 class="centro revela">Dúvidas</h2>
-      <div class="faq">
-        <details><summary>Preciso saber programar?</summary><p>Não. Você copia comandos prontos e edita um arquivo de texto. O Claude Code entende pedidos em português, e o curso mostra exatamente o que digitar.</p></details>
-        <details><summary>Preciso pagar alguma ferramenta?</summary><p>O curso funciona com ferramentas grátis (CapCut e o kit). O caminho com Claude Code exige a assinatura do Claude (plano Pro ou superior), que é opcional.</p></details>
-        <details><summary>Funciona no celular?</summary><p>As aulas e as ferramentas abrem no celular. Para gerar vídeo com o kit ou o Claude Code, você precisa de um computador com Windows ou Mac. Pelo CapCut, dá para fazer no celular.</p></details>
-        <details><summary>Como recebo o acesso?</summary><p>Assim que o pagamento é aprovado, você recebe um e-mail com um link para criar sua senha e entrar na plataforma.</p></details>
-        <details><summary>O curso ensina a postar e crescer o perfil?</summary><p>Não. Ele é focado em fazer o vídeo: ideia, roteiro, imagem, voz e montagem com IA.</p></details>
-        <details><summary>Vou viralizar?</summary><p>Ninguém pode garantir isso. O curso te dá um processo de produção baseado no que funcionou em testes reais, mas o resultado depende de tema, constância e teste.</p></details>
-        <details><summary>E se eu não gostar?</summary><p>Você tem 7 dias de garantia. Peça o reembolso pela Kiwify e devolvemos 100% do valor.</p></details>
-      </div>
+  <section>
+    <div class="c faq">
+      <h2>Perguntas</h2>
+      <details><summary>Preciso saber programar?</summary><p>Não. Você cola mensagens prontas no aplicativo do Claude e ele faz o resto.</p></details>
+      <details><summary>Quanto custa o Claude?</summary><p>O aplicativo é gratuito, mas fazer vídeos exige o plano Pro, uma assinatura mensal paga direto para a Anthropic. Confira o preço atual em claude.ai.</p></details>
+      <details><summary>Funciona no celular?</summary><p>Os vídeos são feitos no computador, com Windows 10 ou 11, ou Mac. O passo a passo dá para ler no celular.</p></details>
+      <details><summary>Que tipo de vídeo sai?</summary><p>Vídeos verticais de 20 a 30 segundos, com desenho animado, narração em português e legenda. Funciona melhor com temas do dia a dia: objetos da casa, situações em família, "como foi inventado".</p></details>
+      <details><summary>Como recebo o acesso?</summary><p>Quando o pagamento é aprovado, chega um e-mail com um link para você criar sua senha e entrar. Se não achar, olhe o spam e a aba Promoções.</p></details>
+      <details><summary>E se eu não gostar?</summary><p>Você tem 7 dias para pedir o reembolso pela Kiwify.</p></details>
     </div>
   </section>
 </main>
 
 <footer>
-  <div class="cont">
-    <p>Fábrica de Vídeos com IA · Pagamento processado pela Kiwify.</p>
-    <p>Claude e Claude Code são marcas da Anthropic. Remotion, CapCut e Lemo-Opuscar pertencem aos seus donos. Este curso não é afiliado a nenhuma dessas empresas.</p>
-    <p><a href="curso/">Área do aluno</a> · Suporte: <a href="mailto:pedro.videos.shorts@gmail.com">pedro.videos.shorts@gmail.com</a></p>
+  <div class="c">
+    <p>Fábrica de Vídeos · Suporte: <a href="mailto:pedro.videos.shorts@gmail.com">pedro.videos.shorts@gmail.com</a> · <a href="curso/">Área do aluno</a></p>
+    <p>Claude é uma marca da Anthropic. Este produto não é afiliado à Anthropic.</p>
   </div>
 </footer>
 
-<div class="fixo"><div><b>R$ 39,90</b><small>acesso imediato · 7 dias de garantia</small></div><a class="btn comprar" href="#preco">Comprar</a></div>
+<div class="barra-fixa"><div><b>R$ 39,90</b>7 dias de garantia</div><a class="btn comprar" href="#preco">Comprar</a></div>
 
 <script>
-// Link do checkout da Kiwify (preenchido quando o produto existir)
 const CHECKOUT = 'https://pay.kiwify.com.br/qPV3Grn';
-const botaoFinal = document.querySelector('#preco .comprar');
-if (CHECKOUT) botaoFinal.href = CHECKOUT;
-else botaoFinal.addEventListener('click', (e) => { e.preventDefault(); botaoFinal.textContent = 'Vendas abrem em instantes'; });
-
-// Revelar ao rolar
-const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('ok'); io.unobserve(e.target); } }), {threshold: .15});
-document.querySelectorAll('.revela').forEach((el) => io.observe(el));
-
-// Contador de roteiro (versão de demonstração)
-const sa = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-const rot = document.getElementById('rot');
-function conferir() {
-  const linhas = rot.value.split('\n').map((l) => l.trim()).filter(Boolean);
-  const pal = linhas.join(' ').split(/\s+/).filter(Boolean).length;
-  const seg = pal / 2.8 + linhas.length * 0.08;
-  document.getElementById('nP').textContent = pal;
-  document.getElementById('nS').textContent = Math.round(seg) + ' s';
-  document.getElementById('nF').textContent = linhas.length;
-  const t = sa(linhas.join(' '));
-  const proib = ['segue', 'curte', 'comenta', 'compartilha', 'manda pro', 'inscreva'].filter((p) => t.includes(p));
-  const maior = linhas.length ? Math.max(...linhas.map((l) => l.split(/\s+/).length)) : 0;
-  const regras = [
-    [pal > 0 && pal <= 85, pal > 85 ? `Até 85 palavras (sobram ${pal - 85})` : 'Até 85 palavras'],
-    [seg >= 18 && seg <= 31, 'Entre 20 e 31 segundos'],
-    [linhas.length >= 6 && linhas.length <= 11, 'Entre 6 e 11 frases, uma imagem por frase'],
-    [linhas[0] && /\bvoce\b/.test(sa(linhas[0])), 'A primeira frase fala com "você"'],
-    [linhas.length && !proib.length, proib.length ? 'Tire da história: ' + proib.join(', ') : 'Sem "segue", "curte" ou "comenta" na história'],
-    [maior > 0 && maior <= 18, 'Frases curtas (até 18 palavras)'],
-  ];
-  document.getElementById('regras').innerHTML = regras.map(([ok, txt]) => `<li class="${ok ? 'ok' : ''}"><i>${ok ? '✓' : '!'}</i><span>${txt}</span></li>`).join('');
-}
-rot.addEventListener('input', conferir); conferir();
+document.getElementById('comprar').href = CHECKOUT;
 </script>
 </body>
 </html>
