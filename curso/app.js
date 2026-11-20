@@ -94,7 +94,7 @@
         <button class="btn primario grande" type="submit">Entrar</button>
       </form>
       <button class="link-pequeno" type="button" id="esqueci">Esqueci minha senha</button>
-      <p style="margin:14px 0 0;font-size:.8125rem">Primeiro acesso? Use o link que enviamos para o seu e-mail depois da compra.</p>`);
+      <p style="margin:14px 0 0;font-size:.8125rem">Primeiro acesso? Use o link que enviamos para o seu e-mail depois da compra. Ajuda: <a href="mailto:pedro.videos.shorts@gmail.com">pedro.videos.shorts@gmail.com</a></p>`);
     const form = $('form', el);
     $('#email', el).focus();
     form.addEventListener('submit', async (e) => {
@@ -181,7 +181,8 @@
       <h1>Acesso não encontrado</h1>
       <p>Entramos na conta <strong>${esc(usuario?.email)}</strong>, mas não achamos uma compra ativa para ela. Se você comprou com outro e-mail, entre com ele. Se acabou de comprar, aguarde alguns minutos.</p>
       <button class="btn primario grande" id="tentar">Tentar de novo</button>
-      <button class="link-pequeno" id="sair">Sair e entrar com outro e-mail</button>`);
+      <button class="link-pequeno" id="sair">Sair e entrar com outro e-mail</button>
+      <p style="margin:10px 0 0;font-size:.8125rem">Ajuda: <a href="mailto:pedro.videos.shorts@gmail.com">pedro.videos.shorts@gmail.com</a></p>`);
     $('#tentar', el).addEventListener('click', () => entrar());
     $('#sair', el).addEventListener('click', async () => { await sb.auth.signOut(); telaLogin(); });
   }
