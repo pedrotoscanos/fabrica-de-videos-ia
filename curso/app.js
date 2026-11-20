@@ -194,9 +194,14 @@
   // ---------- dados ----------
   async function carregarCurso() {
     if (DEMO) return (await fetch('../../dist/aulas.json')).json();
-    const {data, error} = await sb.storage.from('curso').download('aulas.json');
-    if (error || !data) throw new Error('sem-acesso');
-    return JSON.parse(await data.text());
+    // Busca sempre a versão nova (o download padrão fica em cache no navegador por até 1 h).
+    const {data: {session}} = await sb.auth.getSession();
+    const r = await fetch(`${CFG.supabaseUrl}/storage/v1/object/curso/aulas.json`, {
+      headers: {Authorization: `Bearer ${session?.access_token}`, apikey: CFG.supabaseKey},
+      cache: 'no-store',
+    }).catch(() => null);
+    if (!r || !r.ok) throw new Error('sem-acesso');
+    return r.json();
   }
 
   const chaveProg = () => `fvia:prog:${usuario?.id || 'demo'}`;
