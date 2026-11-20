@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https://ufecxtcdhwzszlxagkxf.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'">
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#fff8f1" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0f0b08" media="(prefers-color-scheme: dark)">
@@ -12,7 +13,7 @@
 </head>
 <body>
   <div id="raiz"><div class="carregando"><div class="spinner" role="status" aria-label="Carregando"></div></div></div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.80.0/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.80.0/dist/umd/supabase.min.js" integrity="sha384-2JTPg3zhXmkt+u8YqHejqdWifab2P6qOa5egtXEV+oANEOMRFbZvEapLpn/T9uQ0" crossorigin="anonymous"></script>
   <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
