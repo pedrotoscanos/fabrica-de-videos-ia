@@ -148,7 +148,6 @@ footer p { margin: 0 0 6px; }
 </head>
 <body>
 
-<div class="faixa" id="faixa">Preço de lançamento: <b>R$ 39,90</b> até 30/11 · termina em <b data-relogio-curto>--</b></div>
 
 <main>
   <div class="c heroi">
@@ -240,16 +239,11 @@ footer p { margin: 0 0 6px; }
   <section id="oferta">
     <div class="c">
       <div class="oferta">
-        <span class="rotulo">PREÇO DE LANÇAMENTO</span>
+        <span class="rotulo">ACESSO COMPLETO</span>
         <h3>Fábrica de Vídeos</h3>
-        <div class="de">A partir de 01/12: R$ 129,90</div>
         <div class="por"><small>R$</small>39,90</div>
         <div class="parc">pagamento único · acesso para sempre</div>
-        <div class="relogio" aria-live="polite">
-          <div><b data-d>--</b><span>dias</span></div><div><b data-h>--</b><span>horas</span></div><div><b data-m>--</b><span>min</span></div><div><b data-s>--</b><span>seg</span></div>
-        </div>
-        <p class="aviso-preco">O preço de lançamento vale até 30/11 às 23h59. Depois, passa a ser R$ 129,90.</p>
-        <a class="btn" id="comprar" href="https://pay.kiwify.com.br/qPV3Grn">GARANTIR POR R$ 39,90</a>
+        <a class="btn" id="comprar" href="https://pay.kiwify.com.br/qPV3Grn">QUERO MEU ACESSO</a>
         <div class="pagamento">Pix ou cartão · Pagamento seguro pela Kiwify · Acesso chega no seu e-mail</div>
       </div>
     </div>
@@ -286,27 +280,9 @@ footer p { margin: 0 0 6px; }
   </div>
 </footer>
 
-<div class="fixa" id="fixa"><div class="p"><b>R$ 39,90</b>até 30/11 · depois R$ 129,90</div><a class="btn" href="#oferta">GARANTIR</a></div>
+<div class="fixa" id="fixa"><div class="p"><b>R$ 39,90</b>pagamento único</div><a class="btn" href="#oferta">GARANTIR</a></div>
 
 <script>
-// Fim REAL do preço de lançamento. Depois desta data, o preço na Kiwify sobe para R$ 129,90.
-const FIM = new Date('2026-11-30T23:59:59-03:00');
-const dois = (n) => String(n).padStart(2, '0');
-function tick() {
-  let s = Math.max(0, Math.floor((FIM - Date.now()) / 1000));
-  if (s === 0) {
-    document.getElementById('faixa').style.display = 'none';
-    document.querySelectorAll('.relogio, .aviso-preco, .rotulo, .de').forEach((e) => e.remove());
-    return;
-  }
-  const d = Math.floor(s / 86400); s %= 86400;
-  const h = Math.floor(s / 3600); s %= 3600;
-  const m = Math.floor(s / 60); s %= 60;
-  const q = (sel, v) => document.querySelectorAll(sel).forEach((e) => (e.textContent = v));
-  q('[data-d]', dois(d)); q('[data-h]', dois(h)); q('[data-m]', dois(m)); q('[data-s]', dois(s));
-  q('[data-relogio-curto]', `${d}d ${dois(h)}h ${dois(m)}m`);
-}
-tick(); setInterval(tick, 1000);
 
 // Barra de compra fixa depois do topo
 const fixa = document.getElementById('fixa');
